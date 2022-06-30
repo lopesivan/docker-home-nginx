@@ -1,0 +1,36 @@
+version: "2"
+
+services:
+
+  nginx:
+    image: ${NAME}:${VERSION}
+    container_name: ${CONTAINER_NAME}
+    restart: always
+    # command: /bin/sh
+    user: root
+
+    ports:
+      - "8899:80"
+
+    volumes:
+      - ${PWD}/mysite.template:/usr/share/nginx/html
+      - ${PWD}/conf.d:/etc/nginx/conf.d
+
+    # volumes:
+    #   - ${PWD}/mysite.template:/etc/nginx/conf.d/mysite.template
+
+    env_file: env.production
+
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    mem_limit: 20M
+    #mem_limit: 20Mg
+    cpu_quota: 50000
+    cap_add:
+      - IPC_LOCK
+
